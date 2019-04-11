@@ -1,0 +1,256 @@
+version: "2.1"
+services:
+
+##############################################################################
+############################ Nginx container #################################
+
+  nginx: 
+      image: nginx:latest
+      container_name: nginx
+      volumes:
+        - ./nginx/conf.d/:/etc/nginx/conf.d/
+        - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      ports:
+        - 80:80
+        - 443:443
+      links:
+        - rocketchat
+      networks:
+        - reverseproxy
+
+##############################################################################
+############################ DB containers ###################################
+
+  db_rocketchat:
+    image: mongo
+    volumes:
+      - ./rocketchat/dbdata/runtime/db:/data/db
+      - ./rocketchat/dbdata/dump:/dump
+    command: mongod --smallfiles
+    networks:
+      - rocketchat
+    healthcheck:
+      test: ["CMD-SHELL","grep `printf '%x' 27017` /proc/net/tcp"]
+      interval: 5s
+      timeout: 1s
+      retries: 30
+
+  db_wordpress:
+    image: mysql:5.7
+    volumes:
+      - ./wordpress/db_data:/var/lib/mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: prout
+      MYSQL_DATABASE: wordpress 
+      MYSQL_USER: wordpress
+      MYSQL_PASSWORD: wordpress
+    networks:
+      - wordpress
+
+  db_nextcloud:
+    image: mariadb
+    restart: always
+    volumes:
+      - ./nextcloud/db/:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=gallyroot/
+      - MYSQL_PASSWORD=gally123
+      - MYSQL_DATABASE=nextcloud
+      - MYSQL_USER=nextcloud
+    networks:
+      - nextcloud
+
+  db_gitea:
+    image: postgres:9.6
+    restart: always
+    environment:
+      - POSTGRES_USER=gitea
+      - POSTGRES_PASSWORD=gitea
+      - POSTGRES_DB=gitea
+    networks:
+      - gitea
+    volumes:
+      - ./gitea/postgres:/var/lib/postgresql/data
+      - ./gitea/gitea_db_data.pgsql:/docker-entrypoint-initdb.d/gitea_db_data.sql
+
+##############################################################################
+############################ App containers ##################################
+
+  nextcloud:
+    image: nextcloud
+    depends_on:
+      - db_nextcloud
+    environment:
+      - MYSQL_ROOT_PASSWORD=gallyroot/
+      - MYSQL_PASSWORD=gally123
+      - MYSQL_DATABASE=nextcloud
+      - MYSQL_USER=nextcloud
+      - MYSQL_HOST=db_nextcloud
+      - NEXTCLOUD_ADMIN_USER=Gally
+      - NEXTCLOUD_ADMIN_PASSWORD=Gally123/
+      # Override some config.php conf for Nginx R-Prox
+      - NC_overwritewebroot=/cloud
+      - NC_overwrite.cli.url=http://localhost/cloud
+    volumes:
+      - ./nextcloud/nextcloud/:/var/www/html
+    restart: always
+    networks:
+      - nextcloud
+      - reverseproxy
+      - openldap
+    healthcheck:
+       #test: ["CMD-SHELL","grep `printf '%x' 27017` /proc/net/tcp"]
+      test: ["CMD", "curl", "-f", "http://localhost"]
+      interval: 5s
+      timeout: 1s
+      retries: 30
+
+  rocketchat:
+    image: rocketchat/rocket.chat:latest
+    depends_on:
+      db_rocketchat:
+        condition: service_healthy
+    environment:
+      - MONGO_URL=mongodb://db_rocketchat:27017/rocketchat
+      - ROOT_URL=http://rocketchat/rchat
+      - PORT=3000
+      #- Accounts_UseDNSDomainCheck=True
+      - ADMIN_USERNAME=admin
+      - ADMIN_PASS=passadmin
+      - ADMIN_EMAIL=admin@exemple.com
+      # Skip the Wizard conf organization and things like that
+      - OVERWRITE_SETTING_Show_Setup_Wizard=completed
+      # Conf ldap
+      - OVERWRITE_SETTING_LDAP_Host=openldap
+      - OVERWRITE_SETTING_LDAP_Port=389
+      - OVERWRITE_SETTING_LDAP_Authentication=true
+      - OVERWRITE_SETTING_LDAP_Authentication_UserDN=cn=admin,dc=projet,dc=projetdocker
+      - OVERWRITE_SETTING_LDAP_Authentication_Password=totoplop
+      - OVERWRITE_SETTING_LDAP_BaseDN=ou=People,dc=projet,dc=projetdocker
+      - OVERWRITE_SETTING_LDAP_User_Search_Filter=(|(objectclass=posixAccount))
+      - OVERWRITE_SETTING_LDAP_User_Search_Field=uid
+      - OVERWRITE_SETTING_LDAP_Enable=true
+      - OVERWRITE_SETTING_LDAP_Default_Domain=projet.projetdocker
+
+    links:
+      - db_rocketchat:db_rocketchat
+    networks:
+      - reverseproxy
+      - rocketchat
+      - openldap
+
+  gitea:
+    image: gitea/gitea:latest
+    environment:
+      - APP_NAME="Gitea"
+      - RUN_MODE=prod
+      - ROOT_URL=http://gitea/git/
+      - DISABLE_SSH=false
+      - USER_UID=1000
+      - USER_GID=1000
+      - DB_TYPE=postgres
+      - DB_HOST=db_gitea:5432
+      - DB_NAME=gitea
+      - DB_USER=gitea
+      - DB_PASSWD=gitea
+      - DISABLE_SSH=true
+      - INSTALL_LOCK=true
+      - ENABLE_CAPTCHA=true
+    restart: always
+    networks:
+      - gitea
+      - reverseproxy
+    volumes:
+      - ./gitea/gitea:/data
+      - ./gitea/app.ini:/data/gitea/conf/app.ini
+    depends_on:
+      - db_gitea
+
+  wordpress:
+    depends_on:
+      - db_wordpress
+    image: wordpress:latest
+    ports:
+      - 8000:80
+    restart: always
+    environment:
+      WORDPRESS_DB_HOST: db_wordpress:3306
+      WORDPRESS_DB_USER: wordpress
+      WORDPRESS_DB_PASSWORD: wordpress
+      WORDPRESS_DB_NAME: wordpress
+    volumes:
+             - ./wordpress/wp_data:/var/www/html
+    networks:
+      - wordpress
+      - reverseproxy
+    #healthcheck:
+    #  test: ["CMD", "curl", "-f", "http://127.0.0.1:80"]
+    #  interval: 5s
+    #  timeout: 1s
+    #  retries: 300
+
+  wordpress-cli:
+    depends_on:
+      - wordpress
+    restart: on-failure
+    image: wordpress:cli
+    # vstm: This is required to run wordpress-cli with the same
+    # user-id as wordpress. This way there are no permission problems
+    # when running the cli
+    user: xfs
+    # vstm: The sleep 10 is required so that the command is run after
+    # mysql is initialized. Depending on your machine this might take
+    # longer or it can go faster.
+    # vstm: add shared volume
+    #entrypoint: >
+    #  /bin/sh -c '
+    #  sleep 10000000;
+    #  '
+    command: wp core install --url="127.0.0.1:8000/" --title="Yaaaaaaaaaaaaaalaaaa" --admin_user="admin" --admin_password="admin" --admin_email="admin@example.com"
+    volumes:
+      - ./wordpress/wp_data:/var/www/html
+    networks:
+      - wordpress
+
+  openldap:
+    image: osixia/openldap:latest
+    container_name: "openldap"
+    environment:
+      - LDAP_LOG_LEVEL=256
+      - LDAP_ORGANISATION=securite
+      - LDAP_DOMAIN=projet.projetdocker
+      - LDAP_ADMIN_PASSWORD=totoplop
+      - LDAP_CONFIG_PASSWORD=totoplop
+      - LDAP_READONLY_USER=true
+      - LDAP_READONLY_USER_USERNAME=lecteur
+      - LDAP_READONLY_USER_PASSWORD=passedulecteur
+      - LDAP_TLS_CRT_FILENAME=server-ldap.crt
+      - LDAP_TLS_KEY_FILENAME=server-ldap.key
+      - LDAP_TLS_CA_CRT_FILENAME=cacert.pem
+      - LDAP_TLS_VERIFY_CLIENT=never
+      - LDAP_REMOVE_CONFIG_AFTER_SETUP=false
+    command: --copy-service --loglevel debug
+    volumes:
+        - "./openldap/users.ldif:/container/service/slapd/assets/config/bootstrap/ldif/50-bootstrap.ldif"
+        - "./openldap/cert/:/container/service/slapd/assets/certs"
+        #- "./data/config/:/etc/ldap/slapd.d/"
+        #- "./data/database/:/var/lib/ldap/"
+    ports:
+      - "389:389"
+      - "636:636"
+    domainname: "projet.projetdocker"
+    hostname: "projet.projetdocker"
+    networks:
+      - openldap
+
+##############################################################################
+##############################################################################
+
+networks:
+      reverseproxy:
+      rocketchat:
+      nextcloud:
+      wordpress:
+      gitea:
+      openldap:

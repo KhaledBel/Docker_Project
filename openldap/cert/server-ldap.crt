@@ -1,0 +1,90 @@
+Certificate:
+    Data:
+        Version: 3 (0x2)
+        Serial Number: 240 (0xf0)
+    Signature Algorithm: sha256WithRSAEncryption
+        Issuer: C=FR, ST=Rhone-Alpes-Auvergne, L=Lyon, O=TPR, OU=SIRV, CN=Fabien.Rico/emailAddress=fabien.rico@univ-lyon1.fr
+        Validity
+            Not Before: Jan  9 15:05:39 2018 GMT
+            Not After : Jan  9 15:05:39 2019 GMT
+        Subject: C=FR, ST=Rhone-Alpes-Auvergne, O=TPR, OU=SIRV, CN=ldap.tpr.univ-lyon1.fr/emailAddress=fabien.rico@univ-lyon1.fr
+        Subject Public Key Info:
+            Public Key Algorithm: rsaEncryption
+                Public-Key: (2048 bit)
+                Modulus:
+                    00:f5:4a:10:8a:75:d3:17:6d:13:1d:e4:17:0a:23:
+                    01:fe:93:b7:d3:37:cc:e8:8e:7c:ec:f3:a8:5c:28:
+                    d2:31:84:8d:c2:49:f0:b7:06:22:d3:5f:84:9a:9e:
+                    1a:11:2a:66:f3:4b:04:70:06:98:f8:93:8a:47:6b:
+                    85:fe:9b:67:71:ce:b4:a9:96:fd:47:3e:a6:57:83:
+                    5f:a7:a2:36:cb:e4:58:f1:e8:99:fe:5c:11:c6:a9:
+                    85:4a:68:48:47:c4:24:c5:d7:98:fd:a2:75:3f:94:
+                    f0:71:55:10:38:0b:29:aa:3f:e8:02:3a:99:07:8b:
+                    c6:da:04:03:70:50:6e:37:a3:80:65:68:81:12:35:
+                    2b:02:72:d8:ca:7f:9a:2c:d1:1e:c6:b8:2f:4a:7a:
+                    32:ee:b3:26:50:17:25:f8:8c:74:25:38:0e:c1:cf:
+                    11:db:05:4f:81:4b:ab:21:ab:40:e1:2e:4d:b5:e0:
+                    e6:81:43:32:78:d3:51:38:a0:82:ad:d1:2f:99:b7:
+                    0c:52:d5:2d:71:50:fe:6e:00:03:43:10:d1:4b:e2:
+                    b3:b6:c5:df:46:d8:eb:b8:33:33:fd:a5:89:c1:28:
+                    37:ee:b0:34:cc:e4:b1:e6:2f:2f:a8:9f:14:39:b9:
+                    26:c7:c8:ec:ea:8c:f6:c6:ab:ae:8f:9f:b5:1f:a1:
+                    0f:4f
+                Exponent: 65537 (0x10001)
+        X509v3 extensions:
+            X509v3 Basic Constraints: 
+                CA:FALSE
+            Netscape Comment: 
+                OpenSSL Generated Certificate
+            X509v3 Subject Key Identifier: 
+                C0:F1:EA:73:61:4F:49:43:0C:0F:E7:F9:91:F2:F9:89:D0:27:9E:CF
+            X509v3 Authority Key Identifier: 
+                keyid:1F:44:DA:9C:F8:AE:45:AC:DE:69:1F:61:BF:96:B7:4F:9F:A8:2A:0D
+
+            X509v3 Key Usage: 
+                Digital Signature, Non Repudiation, Key Encipherment
+            X509v3 Subject Alternative Name: 
+                DNS:ldap.tpr.univ-lyon1.fr, DNS:ldap, DNS:horus.chezmoi.fr, DNS:localhost, IP Address:172.20.20.2, IP Address:10.250.101.5, IP Address:127.0.0.1
+    Signature Algorithm: sha256WithRSAEncryption
+         8a:86:a8:55:0c:cd:dd:30:2a:1c:c8:92:18:71:dc:ff:27:3e:
+         02:e1:30:e5:5d:83:6e:39:37:a5:4f:f7:b7:21:ca:a0:0d:e2:
+         24:d0:84:8d:71:af:62:44:85:b3:1f:ae:96:4f:4a:32:06:63:
+         ff:41:e6:48:bb:5d:af:59:ed:a9:42:fb:dd:36:cb:b6:f4:f3:
+         04:cc:d2:c4:96:d2:7a:2b:27:55:ee:76:d5:1c:f4:b1:d3:33:
+         19:9b:33:0d:72:c4:05:c4:cc:0a:2a:a8:17:71:42:70:dc:33:
+         5f:9f:cb:d0:3b:00:c4:f6:32:35:0e:1a:ec:2d:92:31:f0:14:
+         78:87:62:b6:64:ae:66:78:23:3d:d7:46:2e:0c:b2:8f:3d:89:
+         f5:7c:dc:79:4f:84:a0:ab:0b:9c:f7:ce:80:e8:4d:84:1b:fc:
+         40:cd:26:bc:a6:55:79:0d:7d:90:de:96:b7:12:14:ff:cd:00:
+         a1:c6:98:ff:31:71:1a:9a:10:9f:dc:86:6b:89:f1:8b:d1:6a:
+         0a:e5:21:df:f0:83:d5:c0:a3:20:fd:d5:88:31:92:60:14:ca:
+         79:6a:f8:8b:b0:2d:8d:a3:ae:27:a5:57:49:5c:78:94:83:6f:
+         5b:10:34:50:66:13:ed:2a:4b:8a:cc:b2:9d:d9:c8:3e:15:0c:
+         b7:ce:a5:a2
+-----BEGIN CERTIFICATE-----
+MIIEjDCCA3SgAwIBAgICAPAwDQYJKoZIhvcNAQELBQAwgZgxCzAJBgNVBAYTAkZS
+MR0wGwYDVQQIDBRSaG9uZS1BbHBlcy1BdXZlcmduZTENMAsGA1UEBwwETHlvbjEM
+MAoGA1UECgwDVFBSMQ0wCwYDVQQLDARTSVJWMRQwEgYDVQQDDAtGYWJpZW4uUmlj
+bzEoMCYGCSqGSIb3DQEJARYZZmFiaWVuLnJpY29AdW5pdi1seW9uMS5mcjAeFw0x
+ODAxMDkxNTA1MzlaFw0xOTAxMDkxNTA1MzlaMIGUMQswCQYDVQQGEwJGUjEdMBsG
+A1UECAwUUmhvbmUtQWxwZXMtQXV2ZXJnbmUxDDAKBgNVBAoMA1RQUjENMAsGA1UE
+CwwEU0lSVjEfMB0GA1UEAwwWbGRhcC50cHIudW5pdi1seW9uMS5mcjEoMCYGCSqG
+SIb3DQEJARYZZmFiaWVuLnJpY29AdW5pdi1seW9uMS5mcjCCASIwDQYJKoZIhvcN
+AQEBBQADggEPADCCAQoCggEBAPVKEIp10xdtEx3kFwojAf6Tt9M3zOiOfOzzqFwo
+0jGEjcJJ8LcGItNfhJqeGhEqZvNLBHAGmPiTikdrhf6bZ3HOtKmW/Uc+pleDX6ei
+NsvkWPHomf5cEcaphUpoSEfEJMXXmP2idT+U8HFVEDgLKao/6AI6mQeLxtoEA3BQ
+bjejgGVogRI1KwJy2Mp/mizRHsa4L0p6Mu6zJlAXJfiMdCU4DsHPEdsFT4FLqyGr
+QOEuTbXg5oFDMnjTUTiggq3RL5m3DFLVLXFQ/m4AA0MQ0Uvis7bF30bY67gzM/2l
+icEoN+6wNMzkseYvL6ifFDm5JsfI7OqM9sarro+ftR+hD08CAwEAAaOB4TCB3jAJ
+BgNVHRMEAjAAMCwGCWCGSAGG+EIBDQQfFh1PcGVuU1NMIEdlbmVyYXRlZCBDZXJ0
+aWZpY2F0ZTAdBgNVHQ4EFgQUwPHqc2FPSUMMD+f5kfL5idAnns8wHwYDVR0jBBgw
+FoAUH0TanPiuRazeaR9hv5a3T5+oKg0wCwYDVR0PBAQDAgXgMFYGA1UdEQRPME2C
+FmxkYXAudHByLnVuaXYtbHlvbjEuZnKCBGxkYXCCEGhvcnVzLmNoZXptb2kuZnKC
+CWxvY2FsaG9zdIcErBQUAocECvplBYcEfwAAATANBgkqhkiG9w0BAQsFAAOCAQEA
+ioaoVQzN3TAqHMiSGHHc/yc+AuEw5V2Dbjk3pU/3tyHKoA3iJNCEjXGvYkSFsx+u
+lk9KMgZj/0HmSLtdr1ntqUL73TbLtvTzBMzSxJbSeisnVe521Rz0sdMzGZszDXLE
+BcTMCiqoF3FCcNwzX5/L0DsAxPYyNQ4a7C2SMfAUeIditmSuZngjPddGLgyyjz2J
+9XzceU+EoKsLnPfOgOhNhBv8QM0mvKZVeQ19kN6WtxIU/80AocaY/zFxGpoQn9yG
+a4nxi9FqCuUh3/CD1cCjIP3ViDGSYBTKeWr4i7AtjaOuJ6VXSVx4lINvWxA0UGYT
+7SpLisyyndnIPhUMt86log==
+-----END CERTIFICATE-----
